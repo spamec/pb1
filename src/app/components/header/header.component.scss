@@ -1,0 +1,11 @@
+@import "../../variables";
+
+.header-bg{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: flex-start;
+  width: 100%;
+  height: $header-height;
+  overflow: hidden;
+}
