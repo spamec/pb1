@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {environment} from '../../../../pablo1/src/environments/environment';
+import {environment} from '../../environments/environment';
 
 
 @Injectable({
@@ -11,10 +11,6 @@ export class WialonService {
   constructor() {
     this.wialon = window['wialon'];
     this.qx = window['qx'];
-    // this.initSdk().then(() => {
-    //   console.log('%c Init WialonSDK Success! ', 'background: #333; color: #bada55');
-    // }).catch(e => console.error(e));
-
   }
 
   wialon: any;
