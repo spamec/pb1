@@ -1,6 +1,13 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 
+const getInteger = (value: number | string) => {
+  if (typeof value === 'string') {
+    return parseInt(value, 10);
+  } else if (typeof value === 'number') {
+    return (value > 0) ? Math.floor(value) : Math.ceil(value);
+  }
+};
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +17,8 @@ export class WialonService {
 
   constructor() {
     this.wialon = window['wialon'];
+    this.wialon.core.Session.getInstance().loadLibrary('resourceReports');
+    this.wialon.core.Session.getInstance().loadLibrary('unitReportSettings');
     this.qx = window['qx'];
   }
 
@@ -45,8 +54,22 @@ export class WialonService {
     return null;
   }
 
-  private static loginErrConsole() {
 
+  fillTimezoneInfo() {
+    const minutes = getInteger(this.wialon.util.DateTime.getTimezoneOffset() % (3600) / 60);
+    const hours = getInteger(this.wialon.util.DateTime.getTimezoneOffset() / 3600);
+    let plus = (hours > 0) ? '+' : '-';
+    if (hours === 0) {
+      plus = (minutes >= 0) ? '+' : '-';
+    }
+    return `UTC ${plus} ${
+      (Math.abs(hours) < 10)
+        ? '0' + Math.abs(hours)
+        : Math.abs(hours)
+      }:${
+      (Math.abs(minutes) < 10)
+        ? '0' + Math.abs(minutes)
+        : Math.abs(minutes)}`;
   }
 
   initSdk() {
@@ -70,7 +93,6 @@ export class WialonService {
       } else if (token) {
         this.wialon.core.Session.getInstance().loginToken(token, this.qx.lang.Function.bind(this.addSid, this));
       } else {
-        WialonService.loginErrConsole();
         reject('Auth failed');
       }
     });

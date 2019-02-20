@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {WialonService} from '../../services/wialon.service';
 
 @Component({
   selector: 'app-header',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  timezoneInfo: string;
 
-  constructor() { }
+  constructor(private wialonService: WialonService) {
+  }
 
   ngOnInit() {
+    this.timezoneInfo = this.wialonService.fillTimezoneInfo();
   }
 
 }
