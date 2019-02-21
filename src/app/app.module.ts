@@ -1,10 +1,13 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
-
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 import {WialonService} from './services/wialon.service';
-import { TestComponent } from './components/test/test.component';
-import { HeaderComponent } from './components/header/header.component';
+import {TestComponent} from './components/test/test.component';
+import {HeaderComponent} from './components/header/header.component';
+import {MaterialModule} from './material/material.module';
+import { DataFilterComponent } from './components/header/data-filter/data-filter.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 export function init_wialon(wialonService: WialonService) {
   return () => wialonService.initSdk();
@@ -15,14 +18,21 @@ export function init_wialon(wialonService: WialonService) {
   declarations: [
     AppComponent,
     TestComponent,
-    HeaderComponent
+    HeaderComponent,
+    DataFilterComponent,
+    // TableFilterComponent,
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MaterialModule
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory: init_wialon, deps: [WialonService], multi: true}
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

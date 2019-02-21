@@ -1,0 +1,13 @@
+<mat-form-field>
+  <input matInput [matDatepicker]="pickerFrom" placeholder="Choose a date from" [formControl]="dateFrom">
+  <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+  <mat-datepicker #pickerFrom color="accent"></mat-datepicker>
+</mat-form-field>
+<mat-form-field>
+  <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date to" [formControl]="dateTo">
+  <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+  <mat-datepicker #pickerTo color="accent"></mat-datepicker>
+</mat-form-field>
+
+<button  color="primary" mat-flat-button>Accept</button>
+

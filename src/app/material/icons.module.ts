@@ -1,0 +1,135 @@
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {DomSanitizer} from '@angular/platform-browser';
+import {MatIconRegistry} from '@angular/material';
+
+@NgModule({
+  imports: [CommonModule],
+  declarations: []
+})
+export class IconsModule {
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'layers',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/layers.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'anatylics',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/anatylics.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'bookmarks',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/bookmarks.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'map-statistic',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/map-statistic.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'search',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/search.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'close',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/close.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'cancel-circle',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/cancel-circle.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'grid',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/grid.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'legend',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/legend.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'settings',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/settings.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'text',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/text.svg')
+    );
+
+    iconRegistry.addSvgIcon(
+      'show-info',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/show-info.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'plus-circle',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/plus-circle.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'save',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/save.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'share',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/share.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'print',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/print-modal.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'A4',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/a4.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'custom-size',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/custom-size.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'orientation',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/orientation.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'baseline-edit',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/baseline-edit.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'plus',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/plus.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'header',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/heading.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'measure',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/measure.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'cadastre',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/rr.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'trash',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/thrash.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'measure-polygon',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/measure-polygon.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'measure-square',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/measure-square.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'measure-lines',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/measure-lines.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'measure-circle',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/measure-circle.svg')
+    );
+    iconRegistry.addSvgIcon(
+      'help',
+      sanitizer.bypassSecurityTrustResourceUrl('static/assets/icons/help.svg')
+    );
+
+  }
+}

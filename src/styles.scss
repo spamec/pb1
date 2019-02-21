@@ -1,5 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+@import "./app/material/theme.scss";
+@include mat-core();
+@include angular-material-theme($my-theme);
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&subset=cyrillic,cyrillic-ext');
+
 body{
   padding: 0;
   margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 12px;
+  line-height: 1.33;
+  color: mat-color($foreground, text);
+  background-color: mat-color($background, card);
+  //color: $foreground;
+  //background-color: $background;
 }
