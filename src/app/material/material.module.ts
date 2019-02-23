@@ -39,7 +39,7 @@ import {
   MatToolbarModule,
   MatTooltipModule,
   MatTreeModule,
-  MatPaginatorIntl
+  MatPaginatorIntl, MAT_DATE_LOCALE
 } from '@angular/material';
 import {getPaginatorIntl} from './ru-paginator-intl';
 
@@ -87,7 +87,10 @@ import {getPaginatorIntl} from './ru-paginator-intl';
     MatTreeModule,
     ScrollingModule
   ],
-  providers: [{provide: MatPaginatorIntl, useValue: getPaginatorIntl()}]
+  providers: [
+    {provide: MatPaginatorIntl, useValue: getPaginatorIntl()},
+    {provide: MAT_DATE_LOCALE, useValue: 'es-ES'}
+    ]
 })
 export class MaterialModule {
 }

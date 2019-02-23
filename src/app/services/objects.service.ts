@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {WialonService} from './wialon.service';
 import {Observable, Subject, of, throwError} from 'rxjs';
+import {MyDateFilter} from '../models/my-date-filter';
 
 interface IReport {
   c: number;
@@ -71,6 +72,45 @@ export class ObjectsService {
             resolve(data.items);
           }
         }, this));
+    });
+  }
+
+  updateTable(filter: MyDateFilter) {
+    let WialonTimeStampDateFrom = filter.DateFrom.getTime() / 1000 | 0;
+    WialonTimeStampDateFrom -= (filter.DateFrom.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
+    let WialonTimeStampDateTo = filter.DateTo.getTime() / 1000 | 0;
+    WialonTimeStampDateTo -= (filter.DateTo.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
+    const filterArray = [];
+    let _to = 0;
+    let _from = WialonTimeStampDateFrom;
+    while (_to < WialonTimeStampDateTo) {
+      _to = _from + 3599;
+      filterArray.push([_from, _to]);
+      _from += 3600;
+    }
+    console.log(filterArray);
+
+    this.execMyReport(filterArray[11]).then(data => {
+      console.log(data);
+    });
+
+  }
+
+  execMyReport(time) {
+    return new Promise((resolve, reject) => {
+      const result = [];
+      const report = this.masterResource.getReport(this.reportId);
+      result[time[0]] = {};
+      const interval = {'from': time[0], 'to': time[1], 'flags': this.wialonService.wialon.item.MReport.intervalFlag.absolute};
+      this.masterResource.execReport(report, 18626632, 0, interval, // execute selected report
+        (code, data) => { // execReport template
+          if (code) {
+            return;
+          }
+
+          resolve(data.getTables());
+        }
+      );
     });
   }
 
