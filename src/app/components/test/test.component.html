@@ -1,7 +1,36 @@
-<div>
+<div *ngIf="(objects$ && data$)">
+  <!--<div *ngFor="let column of displayedColumns">
+    {{column}}
+  </div>-->
+ <!-- <div *ngFor="let object of objects">
+    {{object.id}}
+    {{object.name}}
+  </div>-->
+  <table mat-table [dataSource]="data$|async" matSort>
+    <ng-container [matColumnDef]="'Time'">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Time</th>
+      <td mat-cell *matCellDef="let row">{{row['Time']|timeOfDay}}</td>
+    </ng-container>
+
+
+     <ng-container [matColumnDef]="object.name" *ngFor="let object of objects$|async; let i = index">
+         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{object.name}}</th>
+         <td   mat-cell *matCellDef="let row">
+           <div class="sub-ceil" [ngClass]="{'green':row[object.name].driving !== '-'}">{{row[object.name].driving}}</div>
+           <div class="sub-ceil" [ngClass]="{'yellow':row[object.name].staying !== '-'}">{{row[object.name].staying}}</div>
+         </td>
+     </ng-container>
+
+     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+     <tr mat-row *matRowDef="let row; columns: displayedColumns">
+     </tr>
+   </table>
+</div>
+
+<!--<div>
   Result report
   <div *ngFor="let data of this.data$| async; let i = index">
-    <!--Id: {{book._id}}, Name: {{book.getName()}}-->
+    &lt;!&ndash;Id: {{book._id}}, Name: {{book.getName()}}&ndash;&gt;
     {{i|timeOfDay}}<br>
     Driving:<br>
     <div *ngFor="let col of data['unit_group_engine_hours']">
@@ -12,6 +41,6 @@
       {{col.c[0]}} / {{col.c[1]}} / {{col.c[2]}}
     </div>
   </div>
-</div>
+</div>-->
 
 

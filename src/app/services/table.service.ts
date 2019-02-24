@@ -13,6 +13,7 @@ export class TableService {
   }
 
   setData(value) {
+    console.log('setData');
     this._data.next(value);
   }
 

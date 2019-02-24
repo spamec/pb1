@@ -19,10 +19,22 @@ const REPORT_NAME = localStorage.getItem('reportName') || 'Avant_C';
 })
 export class ObjectsService {
 
+  private _objectList = new Subject<any[]>();
+
   reportId: number;
   masterResource;
 
+  getObjectList() {
+    return this._objectList;
+  }
+
+  setObjectList(value) {
+    this._objectList.next(value);
+  }
+
   constructor(private wialonService: WialonService) {
+    this.getObjectData();
+
     const spec_resource = {
       itemsType: 'avl_resource',
       propName: 'sys_name',
@@ -43,7 +55,6 @@ export class ObjectsService {
             window.location.reload();
           }
           this.masterResource = (this.reportId) ? item : this.masterResource;
-          console.log(this.reportId, this.masterResource);
         });
       }
     });
@@ -51,30 +62,23 @@ export class ObjectsService {
   }
 
   getObjectData() {
-    return new Promise((resolve, reject) => {
-
-      console.log('getObjectData');
-      if (!this.wialonService.isLogin) {
-        resolve([]);
-      }
-      const spec_acc = {
-        itemsType: 'avl_unit',
-        propName: 'sys_name',
-        propValueMask: '*',
-        sortType: 'sys_name'
-      };
-      const flags_acc = this.wialonService.wialon.item.Item.dataFlag.base;
-      this.wialonService.wialon.core.Session.getInstance().searchItems(spec_acc, true, flags_acc,
-        0, 0, this.wialonService.qx.lang.Function.bind(function (code, data) {
-          if (code || !data) {
-            console.log(('List of units empty.'));
-          } else if (!data.items || data.items.length < 1) {
-            console.log(('List of units empty.'));
-          } else {
-            resolve(data.items);
-          }
-        }, this));
-    });
+    const spec_acc = {
+      itemsType: 'avl_unit',
+      propName: 'sys_name',
+      propValueMask: '*',
+      sortType: 'sys_name'
+    };
+    const flags_acc = this.wialonService.wialon.item.Item.dataFlag.base;
+    this.wialonService.wialon.core.Session.getInstance().searchItems(spec_acc, true, flags_acc,
+      0, 0, (code, data) => {
+        if (code || !data) {
+          console.log(('List of units empty.'));
+        } else if (!data.items || data.items.length < 1) {
+          console.log(('List of units empty.'));
+        } else {
+          this.setObjectList(data.items);
+        }
+      });
   }
 
   updateTable(filter: MyDateFilter) {

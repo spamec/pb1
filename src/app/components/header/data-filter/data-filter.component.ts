@@ -61,7 +61,6 @@ export class DataFilterComponent implements OnInit, OnDestroy {
 
     };
     this.objectsService.updateTable(filter).then(tableData => {
-      // console.log(tableData);
       this.tableService.setData(tableData);
 
     });
