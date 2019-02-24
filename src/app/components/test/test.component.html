@@ -1,5 +1,17 @@
+<div>
+  Result report
+  <div *ngFor="let data of this.data$| async; let i = index">
+    <!--Id: {{book._id}}, Name: {{book.getName()}}-->
+    {{i|timeOfDay}}<br>
+    Driving:<br>
+    <div *ngFor="let col of data['unit_group_engine_hours']">
+      {{col.c[0]}} / {{col.c[1]}} / {{col.c[2]}}
+    </div>
+    Staying:<br>
+    <div *ngFor="let col of data['unit_group_trips']">
+      {{col.c[0]}} / {{col.c[1]}} / {{col.c[2]}}
+    </div>
+  </div>
+</div>
 
-<li *ngFor="let book of this.data| async" >
-  Id: {{book._id}}, Name: {{book.getName()}}
-</li>
 

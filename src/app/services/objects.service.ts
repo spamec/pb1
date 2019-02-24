@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {WialonService} from './wialon.service';
 import {Observable, Subject, of, throwError} from 'rxjs';
 import {MyDateFilter} from '../models/my-date-filter';
+import {WialonReportResult} from '../models/wialon-report-result';
+import {TableData} from '../models/table-data';
 
 interface IReport {
   c: number;
@@ -76,39 +78,53 @@ export class ObjectsService {
   }
 
   updateTable(filter: MyDateFilter) {
-    let WialonTimeStampDateFrom = filter.DateFrom.getTime() / 1000 | 0;
-    WialonTimeStampDateFrom -= (filter.DateFrom.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
-    let WialonTimeStampDateTo = filter.DateTo.getTime() / 1000 | 0;
-    WialonTimeStampDateTo -= (filter.DateTo.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
-    const filterArray = [];
-    let _to = 0;
-    let _from = WialonTimeStampDateFrom;
-    while (_to < WialonTimeStampDateTo) {
-      _to = _from + 3599;
-      filterArray.push([_from, _to]);
-      _from += 3600;
-    }
-    console.log(filterArray);
-
-    this.execMyReport(filterArray[11]).then(data => {
-      console.log(data);
+    return new Promise<TableData[]>((resolve, reject) => {
+      let WialonTimeStampDateFrom = filter.DateFrom.getTime() / 1000 | 0;
+      WialonTimeStampDateFrom -= (filter.DateFrom.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
+      let WialonTimeStampDateTo = filter.DateTo.getTime() / 1000 | 0;
+      WialonTimeStampDateTo -= (filter.DateTo.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
+      const filterArray = [];
+      let _to = 0;
+      let _from = WialonTimeStampDateFrom;
+      while (_to < WialonTimeStampDateTo) {
+        _to = _from + 3599;
+        filterArray.push([_from, _to]);
+        _from += 3600;
+      }
+      let promise = Promise.resolve();
+      const result: TableData[] = [];
+      filterArray.forEach((subFilter, subIndex) => {
+        promise = promise.then(() => this.execMyReport(subFilter).then(data => {
+          const _tables = data.getTables();
+          const _result = {};
+          result[subIndex] = {
+            unit_group_engine_hours: [],
+            unit_group_trips: []
+          };
+          _tables.forEach((table, index) => {
+            data.getTableRows(index, 0, table.rows, // get Table rows
+              (code, rows) => {
+                result[subIndex][table.name] = rows;
+              });
+          });
+        }));
+      });
+      promise.then((data) => {
+        resolve(result);
+      });
     });
-
   }
 
   execMyReport(time) {
-    return new Promise((resolve, reject) => {
-      const result = [];
+    return new Promise<WialonReportResult>((resolve, reject) => {
       const report = this.masterResource.getReport(this.reportId);
-      result[time[0]] = {};
       const interval = {'from': time[0], 'to': time[1], 'flags': this.wialonService.wialon.item.MReport.intervalFlag.absolute};
       this.masterResource.execReport(report, 18626632, 0, interval, // execute selected report
-        (code, data) => { // execReport template
+        (code, data: WialonReportResult) => { // execReport template
           if (code) {
-            return;
+            reject();
           }
-
-          resolve(data.getTables());
+          resolve(data);
         }
       );
     });

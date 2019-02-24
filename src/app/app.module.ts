@@ -8,6 +8,8 @@ import {MaterialModule} from './material/material.module';
 import {DataFilterComponent} from './components/header/data-filter/data-filter.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { TimeOfDayPipe } from './pipes/time-of-day.pipe';
+import {PipesModule} from './pipes/pipes.module';
 
 export function init_wialon(wialonService: WialonService) {
   return () => wialonService.initSdk();
@@ -19,7 +21,8 @@ export function init_wialon(wialonService: WialonService) {
     AppComponent,
     TestComponent,
     HeaderComponent,
-    DataFilterComponent,
+    DataFilterComponent
+
     // TableFilterComponent,
   ],
   imports: [
@@ -27,7 +30,8 @@ export function init_wialon(wialonService: WialonService) {
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule
+    MaterialModule,
+    PipesModule
   ],
   providers: [
     {provide: APP_INITIALIZER, useFactory: init_wialon, deps: [WialonService], multi: true}

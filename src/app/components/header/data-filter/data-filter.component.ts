@@ -8,6 +8,7 @@ import {Observable} from 'rxjs';
 import {WialonService} from '../../../services/wialon.service';
 import {ObjectsService} from '../../../services/objects.service';
 import {MyDateFilter} from '../../../models/my-date-filter';
+import {TableService} from '../../../services/table.service';
 
 @Component({
   selector: 'app-data-filter',
@@ -21,7 +22,7 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   dateFrom$: Observable<Date>;
   dateTo$: Observable<Date>;
 
-  constructor(private filtersService: FiltresService, private objectsService: ObjectsService) {
+  constructor(private filtersService: FiltresService, private objectsService: ObjectsService, private tableService: TableService) {
     // this.
   }
 
@@ -59,7 +60,11 @@ export class DataFilterComponent implements OnInit, OnDestroy {
       DateTo: this.filtersService.dateTo.getValue()
 
     };
-    this.objectsService.updateTable(filter);
+    this.objectsService.updateTable(filter).then(tableData => {
+      // console.log(tableData);
+      this.tableService.setData(tableData);
+
+    });
 
   }
 }
