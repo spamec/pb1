@@ -207,7 +207,7 @@ var timeConvert = function(v){
     });
 
     wialon.core.Session.getInstance().getCurrUser().getLocale(function (arg, locale) {
-      fd = (locale && locale.fd) ? locale.fd : '%Y-%m-%E_%H:%M:%S'; // check for users who have never changed the parameters of the metric
+      fd = (locale && locale.fd) ? locale.fd : '%Y-%m-%E_%H:%M:%S'; // check for drivers who have never changed the parameters of the metric
 
 //            if(locale.wd){}
       initDatepickerOpt = {

@@ -22,6 +22,7 @@ export class ObjectsService {
   reportId: number;
   masterResource;
   private _objectIdListSubject = new Subject<any[]>();
+  private _driverListSubject = new Subject<any[]>();
 
   constructor(private wialonService: WialonService) {
     this.getObjectData();
@@ -32,21 +33,31 @@ export class ObjectsService {
       propValueMask: '*',
       sortType: 'sys_name'
     };
-    const flags_resource = wialonService.wialon.item.Item.dataFlag.base | wialonService.wialon.item.Resource.dataFlag.reports;
+    const flags_resource =
+      wialonService.wialon.item.Item.dataFlag.base
+      | wialonService.wialon.item.Resource.dataFlag.reports
+      | wialonService.wialon.item.Resource.dataFlag.drivers;
 
     wialonService.wialon.core.Session.getInstance().searchItems(spec_resource, true, flags_resource, 0, 0, (code, data) => {
       if (code === 0 && data && data.items && data.items.length > 0) {
         let reports: IReport[];
+
+
         data.items.forEach((item) => {
           reports = Object.values(item.getReports());
-          this.reportId = (reports.find(report => report.n === REPORT_NAME) || {id: 0}).id;
           if (!this.reportId) {
-            const reportName = prompt(`Report ${REPORT_NAME} not found.`, REPORT_NAME);
-            localStorage.setItem('reportName', reportName);
-            window.location.reload();
+            this.reportId = (reports.find(report => report.n === REPORT_NAME) || {id: 0}).id;
           }
-          this.masterResource = (this.reportId) ? item : this.masterResource;
+          if (!!this.reportId) {
+            this.masterResource = (this.reportId) ? item : this.masterResource;
+            this.driverList = item.getDrivers();
+          }
         });
+        if (!this.reportId) {
+          const reportName = prompt(`Report ${REPORT_NAME} not found.`, REPORT_NAME);
+          localStorage.setItem('reportName', reportName);
+          window.location.reload();
+        }
       }
     });
 
@@ -61,6 +72,18 @@ export class ObjectsService {
   set objectIdList(value) {
     this._objectIdList = (value);
     this._objectIdListSubject.next(value);
+  }
+
+  private _driverList: any[];
+
+  get driverList() {
+    return this._driverList;
+  }
+
+  set driverList(value) {
+    const _value = Object.keys(value).map(key => value[key]);
+    this._driverList = (_value);
+    this._driverListSubject.next(_value);
   }
 
   getObjectData() {
@@ -102,7 +125,6 @@ export class ObjectsService {
       filterArray.forEach((subFilter, subIndex) => {
         promise = promise.then(() => this.execMyReport(subFilter).then(data => {
           const _tables = data['reportResult']['tables'];
-          const _result = {};
           result[subIndex] = {
             unit_group_engine_hours: [],
             unit_group_trips: []
@@ -153,5 +175,9 @@ export class ObjectsService {
 
   getObjectList() {
     return this._objectIdListSubject;
+  }
+
+  getDriverList() {
+    return this._driverListSubject;
   }
 }

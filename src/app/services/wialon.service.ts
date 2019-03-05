@@ -19,6 +19,7 @@ export class WialonService {
     this.wialon = window['wialon'];
     this.wialon.core.Session.getInstance().loadLibrary('resourceReports');
     this.wialon.core.Session.getInstance().loadLibrary('unitReportSettings');
+    this.wialon.core.Session.getInstance().loadLibrary('resourceDrivers');
     this.qx = window['qx'];
   }
 
@@ -73,6 +74,7 @@ export class WialonService {
   }
 
   initSdk() {
+    console.log('initSdk');
     return new Promise((resolve, reject) => {
       const url = WialonService.getHtmlVar('baseUrl') || WialonService.getHtmlVar('hostUrl') || 'https://hst-api.wialon.com';
       const user = WialonService.getHtmlVar('user_name') || '';

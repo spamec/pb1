@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {WialonService} from './services/wialon.service';
-import {TestComponent} from './components/test/test.component';
+import {TableComponent} from './components/table/table.component';
 import {HeaderComponent} from './components/header/header.component';
 import {MaterialModule} from './material/material.module';
 import {DataFilterComponent} from './components/header/data-filter/data-filter.component';
@@ -19,7 +19,7 @@ export function init_wialon(wialonService: WialonService) {
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent,
+    TableComponent,
     HeaderComponent,
     DataFilterComponent
 

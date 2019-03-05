@@ -1,6 +1,6 @@
 import {TestBed, async, ComponentFixture} from '@angular/core/testing';
 import {AppComponent} from './app.component';
-import {TestComponent} from './components/test/test.component';
+import {TableComponent} from './components/table/table.component';
 import {HeaderComponent} from './components/header/header.component';
 import {AppModule} from './app.module';
 
