@@ -1,18 +1,22 @@
-<ng-container *ngIf="(dateFrom$ | async)&&(dateTo$ | async)">
-  <mat-form-field>
-    <input matInput [matDatepicker]="pickerFrom" placeholder="Choose a date from" [formControl]="dateFromField"
-           (dateChange)="changeDateFrom($event)">
-    <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
-    <mat-datepicker #pickerFrom color="accent"></mat-datepicker>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput [matDatepicker]="pickerTo" placeholder="Choose a date to" [formControl]="dateToField"
-           (dateChange)="changeDateTo($event)">
-    <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
-    <mat-datepicker #pickerTo color="accent"></mat-datepicker>
-  </mat-form-field>
+<div class="filter-wrapper">
+  <ng-container *ngIf="(dateFrom$ | async)&&(dateTo$ | async)">
+    <mat-form-field >
+      <input  matInput [matDatepicker]="pickerFrom" placeholder="Choose a date from" [formControl]="dateFromField"
+             (dateChange)="changeDateFrom($event)">
+      <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+      <mat-datepicker #pickerFrom color="accent"></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field >
+      <input  matInput [matDatepicker]="pickerTo" placeholder="Choose a date to" [formControl]="dateToField"
+             (dateChange)="changeDateTo($event)">
+      <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+      <mat-datepicker #pickerTo color="accent"></mat-datepicker>
+    </mat-form-field>
 
-  <button color="primary" mat-flat-button (click)="updateData()">Accept</button>
-</ng-container>
+    <span class="button-wrapper"><button color="primary" mat-flat-button (click)="updateData()">Accept</button></span>
+  </ng-container>
+
+</div>
+
 
 

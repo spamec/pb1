@@ -1,0 +1,60 @@
+@import "../../../variables";
+@import '../../../material/theme';
+
+.filter-wrapper{
+  //background-color: mat-color($background, card);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  mat-form-field{
+
+    padding: 10px 5px 0 5px;
+    margin-bottom: 14px;
+    align-self: baseline;
+
+
+    ::ng-deep.mat-form-field-label{
+      color: mat-color($background, card);
+    }
+
+    input{
+      background-color: mat-color($background, card);
+      padding: 5px 0;
+      color: mat-color($foreground, text);
+    }
+
+    ::ng-deep.mat-form-field-ripple {
+      background-color: #eb6700 !important;
+    }
+
+    .mat-datepicker-toggle{
+      filter: invert(100%);
+      ::ng-deep.mat-datepicker-toggle-default-icon{
+        width: 3em;
+        position: relative;
+        top:-5px;
+      }
+
+    }
+
+  }
+
+  .button-wrapper{
+    display: flex;
+    //align-self: flex-start;
+    //width: 16.5%;
+    margin-right: 14px;
+
+    align-self: baseline;
+    position: relative;
+    top:-10px;
+  }
+/*  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;*/
+}

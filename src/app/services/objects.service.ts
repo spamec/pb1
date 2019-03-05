@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {WialonService} from './wialon.service';
-import {Observable, Subject, of, throwError} from 'rxjs';
 import {MyDateFilter} from '../models/my-date-filter';
 import {WialonReportResult} from '../models/wialon-report-result';
 import {TableData} from '../models/table-data';
+import {Subject} from 'rxjs';
 
 interface IReport {
   c: number;
@@ -19,18 +19,9 @@ const REPORT_NAME = localStorage.getItem('reportName') || 'Avant_C';
 })
 export class ObjectsService {
 
-  private _objectList = new Subject<any[]>();
-
   reportId: number;
   masterResource;
-
-  getObjectList() {
-    return this._objectList;
-  }
-
-  setObjectList(value) {
-    this._objectList.next(value);
-  }
+  private _objectIdListSubject = new Subject<any[]>();
 
   constructor(private wialonService: WialonService) {
     this.getObjectData();
@@ -61,6 +52,17 @@ export class ObjectsService {
 
   }
 
+  private _objectIdList: any[];
+
+  get objectIdList() {
+    return this._objectIdList.map(value => value.getId());
+  }
+
+  set objectIdList(value) {
+    this._objectIdList = (value);
+    this._objectIdListSubject.next(value);
+  }
+
   getObjectData() {
     const spec_acc = {
       itemsType: 'avl_unit',
@@ -76,7 +78,7 @@ export class ObjectsService {
         } else if (!data.items || data.items.length < 1) {
           console.log(('List of units empty.'));
         } else {
-          this.setObjectList(data.items);
+          this.objectIdList = data.items;
         }
       });
   }
@@ -99,14 +101,18 @@ export class ObjectsService {
       const result: TableData[] = [];
       filterArray.forEach((subFilter, subIndex) => {
         promise = promise.then(() => this.execMyReport(subFilter).then(data => {
-          const _tables = data.getTables();
+          const _tables = data['reportResult']['tables'];
           const _result = {};
           result[subIndex] = {
             unit_group_engine_hours: [],
             unit_group_trips: []
           };
           _tables.forEach((table, index) => {
-            data.getTableRows(index, 0, table.rows, // get Table rows
+            this.wialonService.wialon.core.Remote.getInstance().remoteCall('report/select_result_rows', {
+                'tableIndex': index,
+                'config': {'type': 'range', 'data': {'from': 0, 'to': table.rows, 'level': 0}}
+              },
+              // data.getTableRows(index, 0, table.rows, // get Table rows
               (code, rows) => {
                 result[subIndex][table.name] = rows;
               });
@@ -123,7 +129,18 @@ export class ObjectsService {
     return new Promise<WialonReportResult>((resolve, reject) => {
       const report = this.masterResource.getReport(this.reportId);
       const interval = {'from': time[0], 'to': time[1], 'flags': this.wialonService.wialon.item.MReport.intervalFlag.absolute};
-      this.masterResource.execReport(report, 18626632, 0, interval, // execute selected report
+      const params = {
+        'reportResourceId': this.masterResource.getId(),
+        'reportTemplateId': report.id,
+        'reportTemplate': null,
+        'reportObjectId': this.objectIdList[0],
+        'reportObjectSecId': 0,
+        'interval': interval,
+        'reportObjectIdList': this.objectIdList
+      };
+
+      this.wialonService.wialon.core.Remote.getInstance().remoteCall('report/exec_report', params,
+        // this.masterResource.execReport(report, 18626632, 0, interval, // execute selected report
         (code, data: WialonReportResult) => { // execReport template
           if (code) {
             reject();
@@ -134,4 +151,7 @@ export class ObjectsService {
     });
   }
 
+  getObjectList() {
+    return this._objectIdListSubject;
+  }
 }

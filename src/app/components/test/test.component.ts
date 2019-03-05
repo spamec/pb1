@@ -35,23 +35,22 @@ export class TestComponent implements OnInit {
     this.data$ = this.tableService.getData().pipe(
       map(list => {
         console.log('%c Update table for data ', 'background: #33a553; color: #fff; font-size:14px;');
-        console.log(this.objects);
         console.log(list);
-        this.data = list.map((timeData, index) => {
-          const _temp = {};
-          this.objects.forEach((object) => {
-            _temp[object.name] = {
-              driving: (timeData.unit_group_trips.find(item => {
-                if (item.c[0] === object.name) {
-                }// todo поменять [время][объект] на [объект][время]
-                return item.c[0] === object.name;
-              }) || {c: ['-', '-']}).c[1],
-              staying: (timeData.unit_group_engine_hours.find(item => item.c[0] === object.name) || {c: ['-', '-']}).c[1],
+        const _temp = [];
+        list.forEach((timeData, index) => {
+          this.objects.forEach((object, indexObj) => {
+            let driving = (timeData.unit_group_trips.find(item => item.c[0] === object.name) || {c: ['-', '-']}).c[1];
+            driving = (driving === '0:00:00') ? '-' : driving;
+            let staying = (timeData.unit_group_engine_hours.find(item => item.c[0] === object.name) || {c: ['-', '-']}).c[1];
+            staying = (staying === '0:00:00') ? '-' : staying;
+            _temp[indexObj] = {
+              ...(_temp[indexObj] || {Object: object.name}), ...{
+                [index]: {driving, staying}
+              }
             };
           });
-          return {..._temp, ...{Object: this.objects.map(object => object.name)}};
         });
-
+        this.data = _temp;
         this.displayedColumns = [...['Object'], ...this._displayedColumns];
         console.log(this.data);
         console.log(this.displayedColumns);
@@ -59,7 +58,7 @@ export class TestComponent implements OnInit {
       })
     );
 
-    this.objects$ = this.objectsService.getObjectList().pipe(
+   this.objects$ = this.objectsService.getObjectList().pipe(
       map(value => {
         this.objects = value.map(object => {
           return new WialonObjects(object);

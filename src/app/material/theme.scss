@@ -10,3 +10,6 @@ $my-theme: mat-light-theme(
 
 $foreground: map-get($my-theme, foreground);
 $background: map-get($my-theme, background);
+$primary: map-get($my-theme, primary);
+$accent: map-get($my-theme, accent);
+$warn: map-get($my-theme, warn);
