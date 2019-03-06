@@ -31,23 +31,43 @@ class DriverObjects {
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent implements OnInit, OnDestroy {
+
   data$: Observable<TableData[]>;
   data: any[];
   // objects$: Observable<WialonObjects[]>;
   objects: WialonObjects[];
   displayedColumns: string[];
   _displayedColumns: string[] = Array.from(new Array(24), (val, index) => String(index));
-
-  checked = true;
+  checkedDrivers = true;
+  checkedHideEmpty = true;
   // driversSubscriber: Observable<DriverObjects[]>;
   drivers: WialonObjects[];
-
   dataObjects: any;
   dataDrivers: any;
   private driversSubscriber: Subscription;
   private objectsSubscriber: Subscription;
 
   constructor(private tableService: TableService, private objectsService: ObjectsService) {
+  }
+
+  parseData(object, indexObj, timeData, index, _objects, source) {
+    let driving = (timeData.unit_group_trips.find(item => item.c[source] === object.name) || {c: ['-', '-']}).c[1];
+    driving = (driving === '0:00:00') ? '-' : driving;
+    let staying = (timeData.unit_group_engine_hours.find(item => item.c[source] === object.name) || {c: ['-', '-']}).c[1];
+    staying = (staying === '0:00:00') ? '-' : staying;
+
+    if (!_objects[indexObj]) {
+      _objects[indexObj] = {Object: object.name, drivers: object.name, empty: true};
+    }
+
+    if (_objects[indexObj]['empty'] && (driving !== '-' || staying !== '-')) {
+      _objects[indexObj]['empty'] = false;
+    }
+    _objects[indexObj] = {
+      ..._objects[indexObj], ...{
+        [index]: {driving, staying},
+      }
+    };
   }
 
   ngOnDestroy(): void {
@@ -63,78 +83,12 @@ export class TableComponent implements OnInit, OnDestroy {
         const _objects: Object[] = [];
         const _drivers: Object[] = [];
         list.forEach((timeData, index) => {
-
-          this.objects.forEach((object, indexObj) => {
-            let driving = (timeData.unit_group_trips.find(item => item.c[0] === object.name) || {c: ['-', '-']}).c[1];
-            driving = (driving === '0:00:00') ? '-' : driving;
-            let staying = (timeData.unit_group_engine_hours.find(item => item.c[0] === object.name) || {c: ['-', '-']}).c[1];
-            staying = (staying === '0:00:00') ? '-' : staying;
-
-            // const driverDriving = (timeData.unit_group_trips.find(item => item.c[0] === object.name) || {c: ['-', '-', '']}).c[2];
-            // const driverStaying = (timeData.unit_group_engine_hours.find(item => item.c[0] === object.name) || {c: ['-', '-', '']}).c[2];
-            // const drivers: string = (driverDriving === driverStaying) ? driverDriving : `${driverDriving}, ${driverStaying}`;
-            if (!_objects[indexObj]) {
-              _objects[indexObj] = {
-                Object: object.name
-              };
-            }
-            /*if (!_objects[indexObj].hasOwnProperty('drivers')) {
-              _objects[indexObj]['drivers'] = '';
-              console.log('init drivers', _objects[indexObj]['drivers']);
-            }
-            if (!!drivers && _objects[indexObj]['drivers'] !== drivers) {
-              console.log('lenght', _objects[indexObj]['drivers'].lenght);
-              if (_objects[indexObj]['drivers'].lenght > 0) {
-                _objects[indexObj]['drivers'] = `${_objects[indexObj]['drivers']}, ${drivers}`;
-              } else {
-                _objects[indexObj]['drivers'] = drivers;
-              }
-            }*/
-            _objects[indexObj] = {
-              ..._objects[indexObj], ...{
-                [index]: {driving, staying},
-              }
-            };
-          });
-
-          this.drivers.forEach((object, indexObj) => {
-            let driving = (timeData.unit_group_trips.find(item => item.c[2] === object.name) || {c: ['-', '-']}).c[1];
-            driving = (driving === '0:00:00') ? '-' : driving;
-            let staying = (timeData.unit_group_engine_hours.find(item => item.c[2] === object.name) || {c: ['-', '-']}).c[1];
-            staying = (staying === '0:00:00') ? '-' : staying;
-
-            // const driverDriving = (timeData.unit_group_trips.find(item => item.c[0] === object.name) || {c: ['-', '-', '']}).c[2];
-            // const driverStaying = (timeData.unit_group_engine_hours.find(item => item.c[0] === object.name) || {c: ['-', '-', '']}).c[2];
-            // const drivers: string = (driverDriving === driverStaying) ? driverDriving : `${driverDriving}, ${driverStaying}`;
-            if (!_drivers[indexObj]) {
-              _drivers[indexObj] = {
-                drivers: object.name
-              };
-            }
-            /* if (!_drivers[indexObj].hasOwnProperty('drivers')) {
-               _drivers[indexObj]['drivers'] = '';
-               console.log('init drivers', _drivers[indexObj]['drivers']);
-             }
-             if (!!drivers && _drivers[indexObj]['drivers'] !== drivers) {
-               console.log('lenght', _drivers[indexObj]['drivers'].lenght);
-               if (_drivers[indexObj]['drivers'].lenght > 0) {
-                 _drivers[indexObj]['drivers'] = `${_drivers[indexObj]['drivers']}, ${drivers}`;
-               } else {
-                 _drivers[indexObj]['drivers'] = drivers;
-               }
-             }*/
-            _drivers[indexObj] = {
-              ..._drivers[indexObj], ...{
-                [index]: {driving, staying},
-              }
-            };
-          });
+          this.objects.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _objects, 0));
+          this.drivers.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _drivers, 2));
         });
         this.dataObjects = _objects;
         this.dataDrivers = _drivers;
         this.setDisplayColumns();
-        console.log(this.data);
-        console.log(this.displayedColumns);
         return this.data;
       })
     );
@@ -168,20 +122,27 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   driverFilterToggle() {
-    this.checked = !this.checked;
+    this.checkedDrivers = !this.checkedDrivers;
+    this.setDisplayColumns();
+  }
+
+  emptyFilterToggle() {
+    this.checkedHideEmpty = !this.checkedHideEmpty;
     this.setDisplayColumns();
   }
 
   setDisplayColumns() {
-    if (this.checked) {
-      console.log('Drivers');
-      this.data = this.dataDrivers;
+    let _data;
+    if (this.checkedDrivers) {
+      _data = this.dataDrivers;
       this.displayedColumns = [...['drivers'], ...this._displayedColumns];
-
     } else {
-      console.log('Objects');
-      this.data = this.dataObjects;
+      _data = this.dataObjects;
       this.displayedColumns = [...['Object'], ...this._displayedColumns];
     }
+    this.data = (this.checkedHideEmpty) ? _data.filter(row => {
+      return !row['empty'];
+    }) : _data;
+
   }
 }

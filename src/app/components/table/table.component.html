@@ -1,11 +1,20 @@
 <div *ngIf="(drivers) && (objects) && (data$|async)" class="report-result-wrapper">
-
-  <mat-slide-toggle
-    [checked]="checked"
-    [color]="'primary'"
-    (change)="driverFilterToggle()">
+  <span>
+    <mat-slide-toggle
+        [checked]="checkedHideEmpty"
+        [color]="'primary'"
+        (change)="emptyFilterToggle()">
+    Hide empty rows
+    </mat-slide-toggle>
+    <mat-slide-toggle
+      [checked]="checkedDrivers"
+      [color]="'primary'"
+      (change)="driverFilterToggle()">
     By driver
-  </mat-slide-toggle>
+    </mat-slide-toggle>
+
+  </span>
+
 
   <div class="table-wrapper">
     <table [dataSource]="data" mat-table matSort>
@@ -28,7 +37,7 @@
         </td>
       </ng-container>
 
-      <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+      <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row ></tr>
       <tr *matRowDef="let row; columns: displayedColumns" mat-row>
       </tr>
     </table>
