@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
+import {BlockUIService} from 'ng-block-ui';
+import {BlockNames} from '../components/block-uitemplate/block-ui-template.component';
 
 const getInteger = (value: number | string) => {
   if (typeof value === 'string') {
@@ -15,7 +17,7 @@ const getInteger = (value: number | string) => {
 export class WialonService {
 
 
-  constructor() {
+  constructor(private blockUIService: BlockUIService) {
     this.wialon = window['wialon'];
     this.wialon.core.Session.getInstance().loadLibrary('resourceReports');
     this.wialon.core.Session.getInstance().loadLibrary('unitReportSettings');
@@ -28,6 +30,8 @@ export class WialonService {
   _isLogin: boolean;
 
   set isLogin(value) {
+
+
     this._isLogin = !value;
     if (this._isLogin) {
       console.log('%c Wialon: Successful login! ', 'background: #33a553; color: #fff; font-size:14px;');

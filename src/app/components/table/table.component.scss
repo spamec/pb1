@@ -1,3 +1,5 @@
+@import '../../material/theme';
+
 .report-result-wrapper{
   display: flex;
   flex-direction: column;
@@ -11,6 +13,12 @@
   }
 
   .table-wrapper{
+    .date-header{
+      padding: 10px;
+      font-size: 1.5em;
+      color: mat-color($accent);
+    }
+
     width: 100%;
     overflow-x: auto;
     max-width: 100%;

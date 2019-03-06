@@ -42,10 +42,12 @@ export class TableComponent implements OnInit, OnDestroy {
   checkedHideEmpty = true;
   // driversSubscriber: Observable<DriverObjects[]>;
   drivers: WialonObjects[];
-  dataObjects: any;
-  dataDrivers: any;
+  dataObjects: any[];
+  dataDrivers: any[];
+  dataDate: any[];
   private driversSubscriber: Subscription;
   private objectsSubscriber: Subscription;
+  private DateTo: Date;
 
   constructor(private tableService: TableService, private objectsService: ObjectsService) {
   }
@@ -80,14 +82,31 @@ export class TableComponent implements OnInit, OnDestroy {
       map(list => {
         console.log('%c Update table for data ', 'background: #33a553; color: #fff; font-size:14px;');
         console.log(list);
-        const _objects: Object[] = [];
-        const _drivers: Object[] = [];
-        list.forEach((timeData, index) => {
-          this.objects.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _objects, 0));
-          this.drivers.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _drivers, 2));
+
+        this.DateTo = this.objectsService.DateTo;
+
+        this.dataObjects = [];
+        this.dataDrivers = [];
+        this.dataDate = [];
+        const SIZE = 24;
+        const listByDate = list.reduce((p, c) => {
+          if (p[p.length - 1].length === SIZE) {
+            p.push([]);
+          }
+          p[p.length - 1].push(c);
+          return p;
+        }, [[]]);
+        listByDate.forEach((_list, dateIndex) => {
+          const _objects: Object[] = [];
+          const _drivers: Object[] = [];
+          _list.forEach((timeData, index) => {
+            this.objects.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _objects, 0));
+            this.drivers.forEach((object, indexObj) => this.parseData(object, indexObj, timeData, index, _drivers, 2));
+          });
+          this.dataObjects.unshift(_objects);
+          this.dataDrivers.unshift(_drivers);
+          this.dataDate.push(new Date(this.DateTo.getTime() - (86400000 * dateIndex)));
         });
-        this.dataObjects = _objects;
-        this.dataDrivers = _drivers;
         this.setDisplayColumns();
         return this.data;
       })
@@ -140,9 +159,8 @@ export class TableComponent implements OnInit, OnDestroy {
       _data = this.dataObjects;
       this.displayedColumns = [...['Object'], ...this._displayedColumns];
     }
-    this.data = (this.checkedHideEmpty) ? _data.filter(row => {
+    this.data = (this.checkedHideEmpty) ? _data.map(dateData => dateData.filter(row => {
       return !row['empty'];
-    }) : _data;
-
+    })) : _data;
   }
 }

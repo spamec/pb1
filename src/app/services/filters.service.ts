@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
+import {BlockUIService} from 'ng-block-ui';
+import {BlockNames} from '../components/block-uitemplate/block-ui-template.component';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FiltresService {
+export class FiltersService {
   dateFrom: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   dateTo: BehaviorSubject<Date> = new BehaviorSubject<Date>(new Date());
   constructor() {

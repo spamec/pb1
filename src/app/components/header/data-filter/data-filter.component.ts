@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {MatDatepickerInputEvent} from '@angular/material';
 import {log} from 'util';
-import {FiltresService} from '../../../services/filtres.service';
+import {FiltersService} from '../../../services/filters.service';
 import {tap} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {WialonService} from '../../../services/wialon.service';
@@ -22,7 +22,7 @@ export class DataFilterComponent implements OnInit, OnDestroy {
   dateFrom$: Observable<Date>;
   dateTo$: Observable<Date>;
 
-  constructor(private filtersService: FiltresService, private objectsService: ObjectsService, private tableService: TableService) {
+  constructor(private filtersService: FiltersService, private objectsService: ObjectsService, private tableService: TableService) {
     // this.
   }
 
@@ -58,11 +58,10 @@ export class DataFilterComponent implements OnInit, OnDestroy {
     const filter: MyDateFilter = {
       DateFrom: this.filtersService.dateFrom.getValue(),
       DateTo: this.filtersService.dateTo.getValue()
-
     };
+    console.log(filter);
     this.objectsService.updateTable(filter).then(tableData => {
       this.tableService.setData(tableData);
-
     });
 
   }

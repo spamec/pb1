@@ -4,6 +4,8 @@ import {MyDateFilter} from '../models/my-date-filter';
 import {WialonReportResult} from '../models/wialon-report-result';
 import {TableData} from '../models/table-data';
 import {Subject} from 'rxjs';
+import {BlockNames} from '../components/block-uitemplate/block-ui-template.component';
+import {BlockUIService} from 'ng-block-ui';
 
 interface IReport {
   c: number;
@@ -18,15 +20,20 @@ const REPORT_NAME = localStorage.getItem('reportName') || 'Avant_C';
   providedIn: 'root'
 })
 export class ObjectsService {
+  DateTo: Date;
+
+  blockUIQuence = [];
 
   reportId: number;
   masterResource;
   private _objectIdListSubject = new Subject<any[]>();
   private _driverListSubject = new Subject<any[]>();
 
-  constructor(private wialonService: WialonService) {
+  constructor(private wialonService: WialonService, private blockUIService: BlockUIService) {
     this.getObjectData();
-
+    console.log('constructor');
+    this.blockUIService.start(BlockNames.MainBlock, 'Initialise, please wait...');
+    this.blockUIQuence.push(true);
     const spec_resource = {
       itemsType: 'avl_resource',
       propName: 'sys_name',
@@ -51,6 +58,11 @@ export class ObjectsService {
           if (!!this.reportId) {
             this.masterResource = (this.reportId) ? item : this.masterResource;
             this.driverList = item.getDrivers();
+            this.blockUIQuence.shift();
+            if (this.blockUIQuence.length === 0) {
+              console.log('by driverList');
+              this.blockUIService.stop(BlockNames.MainBlock);
+            }
           }
         });
         if (!this.reportId) {
@@ -87,6 +99,10 @@ export class ObjectsService {
   }
 
   getObjectData() {
+    console.log('getObjectData');
+    this.blockUIQuence.push(true);
+    this.blockUIService.start(BlockNames.MainBlock, 'Initialise, please wait...');
+
     const spec_acc = {
       itemsType: 'avl_unit',
       propName: 'sys_name',
@@ -102,12 +118,21 @@ export class ObjectsService {
           console.log(('List of units empty.'));
         } else {
           this.objectIdList = data.items;
+          this.blockUIQuence.shift();
+          if (this.blockUIQuence.length === 0) {
+            console.log('by objectIdList');
+            this.blockUIService.stop(BlockNames.MainBlock);
+          }
+
         }
       });
   }
 
   updateTable(filter: MyDateFilter) {
+    this.DateTo = filter.DateTo;
+
     return new Promise<TableData[]>((resolve, reject) => {
+      this.blockUIService.start(BlockNames.MainBlock, 'Execute Wialon reports...');
       let WialonTimeStampDateFrom = filter.DateFrom.getTime() / 1000 | 0;
       WialonTimeStampDateFrom -= (filter.DateFrom.getTimezoneOffset() * 60 + this.wialonService.wialon.util.DateTime.getTimezoneOffset());
       let WialonTimeStampDateTo = filter.DateTo.getTime() / 1000 | 0;
@@ -122,8 +147,12 @@ export class ObjectsService {
       }
       let promise = Promise.resolve();
       const result: TableData[] = [];
+
       filterArray.forEach((subFilter, subIndex) => {
+
         promise = promise.then(() => this.execMyReport(subFilter).then(data => {
+          this.blockUIService.start(BlockNames.MainBlock, `Execute Wialon reports...${subIndex + 1}/${filterArray.length}`);
+
           const _tables = data['reportResult']['tables'];
           result[subIndex] = {
             unit_group_engine_hours: [],
@@ -142,6 +171,7 @@ export class ObjectsService {
         }));
       });
       promise.then((data) => {
+        this.blockUIService.stop(BlockNames.MainBlock);
         resolve(result);
       });
     });

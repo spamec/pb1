@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {AppComponent} from './app.component';
 import {WialonService} from './services/wialon.service';
 import {TableComponent} from './components/table/table.component';
@@ -8,8 +8,14 @@ import {MaterialModule} from './material/material.module';
 import {DataFilterComponent} from './components/header/data-filter/data-filter.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { TimeOfDayPipe } from './pipes/time-of-day.pipe';
 import {PipesModule} from './pipes/pipes.module';
+import {BlockUIModule} from 'ng-block-ui';
+import {BlockUiTemplateComponent} from './components/block-uitemplate/block-ui-template.component';
+import localeEs from '@angular/common/locales/es';
+import localeEsExtra from '@angular/common/locales/extra/es';
+import {registerLocaleData} from '@angular/common';
+
+registerLocaleData(localeEs, 'es-ES', localeEsExtra);
 
 export function init_wialon(wialonService: WialonService) {
   return () => wialonService.initSdk();
@@ -21,20 +27,24 @@ export function init_wialon(wialonService: WialonService) {
     AppComponent,
     TableComponent,
     HeaderComponent,
-    DataFilterComponent
+    DataFilterComponent,
+    BlockUiTemplateComponent
 
     // TableFilterComponent,
   ],
+  entryComponents: [BlockUiTemplateComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
-    PipesModule
+    PipesModule,
+    BlockUIModule.forRoot()
   ],
   providers: [
-    {provide: APP_INITIALIZER, useFactory: init_wialon, deps: [WialonService], multi: true}
+    {provide: APP_INITIALIZER, useFactory: init_wialon, deps: [WialonService], multi: true},
+    {provide: LOCALE_ID, useValue: 'es-ES'}
 
   ],
   bootstrap: [AppComponent]
