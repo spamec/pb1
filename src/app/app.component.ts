@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {BlockUI, BlockUIService, NgBlockUI} from 'ng-block-ui';
-import {BlockNames, BlockUiTemplateComponent} from './components/block-uitemplate/block-ui-template.component';
+import {BlockNames} from './block-names.enum';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,6 @@ import {BlockNames, BlockUiTemplateComponent} from './components/block-uitemplat
 })
 export class AppComponent {
   @BlockUI() blockUI: NgBlockUI;
-  blockTemplate = BlockUiTemplateComponent;
   blockName = BlockNames.MainBlock;
   constructor(private blockUIService: BlockUIService) {
     this.blockUI.name = BlockNames.MainBlock;

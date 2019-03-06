@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {BlockUIService} from 'ng-block-ui';
-import {BlockNames} from '../components/block-uitemplate/block-ui-template.component';
 
 const getInteger = (value: number | string) => {
   if (typeof value === 'string') {

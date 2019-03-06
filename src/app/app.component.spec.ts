@@ -27,10 +27,7 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should have as title 'PabloTable'`, () => {
-    fixture.detectChanges();
-    expect(component.title).toEqual('PabloTable');
-  });
+
 
   /*it('should render title in a h1 tag', () => {
     fixture.detectChanges();

@@ -10,7 +10,6 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {PipesModule} from './pipes/pipes.module';
 import {BlockUIModule} from 'ng-block-ui';
-import {BlockUiTemplateComponent} from './components/block-uitemplate/block-ui-template.component';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import {registerLocaleData} from '@angular/common';
@@ -28,11 +27,8 @@ export function init_wialon(wialonService: WialonService) {
     TableComponent,
     HeaderComponent,
     DataFilterComponent,
-    BlockUiTemplateComponent
-
-    // TableFilterComponent,
   ],
-  entryComponents: [BlockUiTemplateComponent],
+  entryComponents: [],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

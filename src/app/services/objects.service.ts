@@ -4,8 +4,8 @@ import {MyDateFilter} from '../models/my-date-filter';
 import {WialonReportResult} from '../models/wialon-report-result';
 import {TableData} from '../models/table-data';
 import {Subject} from 'rxjs';
-import {BlockNames} from '../components/block-uitemplate/block-ui-template.component';
 import {BlockUIService} from 'ng-block-ui';
+import {BlockNames} from '../block-names.enum';
 
 interface IReport {
   c: number;
