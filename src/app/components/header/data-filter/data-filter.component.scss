@@ -4,20 +4,26 @@
 .filter-wrapper{
   //background-color: mat-color($background, card);
   width: 100%;
+  padding: 0.3em;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
+
+  background-color: rgba(mat-color($accent, 50),0.3);
+
   mat-form-field{
 
     padding: 10px 5px 0 5px;
     margin-bottom: 14px;
     align-self: baseline;
+    justify-self:center;
 
 
     ::ng-deep.mat-form-field-label{
-      color: mat-color($background, card);
+      color: mat-color($foreground, text);
+      font-size: 1.2em;
     }
 
     input{
@@ -27,11 +33,11 @@
     }
 
     ::ng-deep.mat-form-field-ripple {
-      background-color: #eb6700 !important;
+      //background-color: #eb6700 !important;
     }
 
     .mat-datepicker-toggle{
-      filter: invert(100%);
+      //filter: invert(100%);
       ::ng-deep.mat-datepicker-toggle-default-icon{
         width: 3em;
         position: relative;
@@ -50,7 +56,7 @@
 
     align-self: baseline;
     position: relative;
-    top:-10px;
+    top:-5px;
   }
 /*  display: flex;
   flex-direction: row;

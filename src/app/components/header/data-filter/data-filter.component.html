@@ -1,4 +1,4 @@
-<div class="filter-wrapper">
+<div class="filter-wrapper mat-elevation-z3">
   <ng-container *ngIf="(dateFrom$ | async)&&(dateTo$ | async)">
     <mat-form-field >
       <input  matInput [matDatepicker]="pickerFrom" placeholder="Choose a date from" [formControl]="dateFromField"
@@ -13,7 +13,7 @@
       <mat-datepicker #pickerTo color="accent"></mat-datepicker>
     </mat-form-field>
 
-    <span class="button-wrapper"><button color="primary" mat-flat-button (click)="updateData()">Accept</button></span>
+    <span class="button-wrapper"><button color="accent" mat-flat-button (click)="updateData()">Accept</button></span>
   </ng-container>
 
 </div>

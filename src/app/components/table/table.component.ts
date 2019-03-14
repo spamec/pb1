@@ -38,7 +38,7 @@ export class TableComponent implements OnInit, OnDestroy {
   objects: WialonObjects[];
   displayedColumns: string[];
   _displayedColumns: string[] = Array.from(new Array(24), (val, index) => String(index));
-  checkedDrivers = true;
+  checkedDrivers = false;
   checkedHideEmpty = true;
   // driversSubscriber: Observable<DriverObjects[]>;
   drivers: WialonObjects[];
