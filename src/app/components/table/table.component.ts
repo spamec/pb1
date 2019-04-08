@@ -59,7 +59,7 @@ export class TableComponent implements OnInit, OnDestroy {
     staying = (staying === '0:00:00') ? '-' : staying;
 
     if (!_objects[indexObj]) {
-      _objects[indexObj] = {Object: object.name, drivers: object.name, empty: true};
+      _objects[indexObj] = {Object: object.name, drivers: object.name, empty: true, Total: 1};
     }
 
     if (_objects[indexObj]['empty'] && (driving !== '-' || staying !== '-')) {
@@ -154,10 +154,10 @@ export class TableComponent implements OnInit, OnDestroy {
     let _data;
     if (this.checkedDrivers) {
       _data = this.dataDrivers;
-      this.displayedColumns = [...['drivers'], ...this._displayedColumns];
+      this.displayedColumns = [...['drivers'], ...this._displayedColumns, ...['Total']];
     } else {
       _data = this.dataObjects;
-      this.displayedColumns = [...['Object'], ...this._displayedColumns];
+      this.displayedColumns = [...['Object'], ...this._displayedColumns, ...['Total']];
     }
     this.data = (this.checkedHideEmpty) ? _data.map(dateData => dateData.filter(row => {
       return !row['empty'];

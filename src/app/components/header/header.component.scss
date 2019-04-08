@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;;
   width: 100%;
   //height: $header-height;
   overflow: hidden;
@@ -18,7 +18,7 @@
   .header-text{
     color: darken( mat-color($accent, 900), 10% );
     font-size: 3.8em;
-    width: 60%;
+    //width: 60%;
     text-align: center;
     box-sizing: border-box;
     min-width: 275px;
@@ -27,8 +27,8 @@
   app-data-filter{
     //height: 60px;
     box-sizing: border-box;
-    width: 30%;
-    margin-left: 10%;
+    //width: 30%;
+    //margin-left: 10%;
     min-width: 234px;
     display: flex;
     //margin-right: 900px;

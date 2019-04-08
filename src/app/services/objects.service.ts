@@ -51,20 +51,24 @@ export class ObjectsService {
 
 
         data.items.forEach((item) => {
-          reports = Object.values(item.getReports());
-          if (!this.reportId) {
-            this.reportId = (reports.find(report => report.n === REPORT_NAME) || {id: 0}).id;
-          }
-          if (!!this.reportId) {
-            this.masterResource = (this.reportId) ? item : this.masterResource;
-            this.driverList = item.getDrivers();
-            this.blockUIQuence.shift();
-            if (this.blockUIQuence.length === 0) {
-              console.log('by driverList');
-              this.blockUIService.stop(BlockNames.MainBlock);
+          if (item && !this.masterResource) {
+            reports = Object.values(item.getReports() || {});
+            if (!this.reportId) {
+              this.reportId = (reports.find(report => report.n === REPORT_NAME) || {id: 0}).id;
+            }
+            if (!!this.reportId) {
+              this.masterResource = (this.reportId) ? item : this.masterResource;
+              this.driverList = item.getDrivers() || {};
+              this.blockUIQuence.shift();
+              if (this.blockUIQuence.length === 0) {
+                console.log('by driverList');
+                this.blockUIService.stop(BlockNames.MainBlock);
+              }
             }
           }
+
         });
+
         if (!this.reportId) {
           const reportName = prompt(`Report ${REPORT_NAME} not found.`, REPORT_NAME);
           localStorage.setItem('reportName', reportName);
@@ -180,6 +184,7 @@ export class ObjectsService {
   execMyReport(time) {
     return new Promise<WialonReportResult>((resolve, reject) => {
       const report = this.masterResource.getReport(this.reportId);
+      console.log(report);
       const interval = {'from': time[0], 'to': time[1], 'flags': this.wialonService.wialon.item.MReport.intervalFlag.absolute};
       const params = {
         'reportResourceId': this.masterResource.getId(),

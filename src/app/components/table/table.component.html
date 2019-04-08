@@ -2,9 +2,9 @@
   <span>
     <mat-slide-toggle
       style="min-width: 150px"
-        [checked]="checkedHideEmpty"
-        [color]="'primary'"
-        (change)="emptyFilterToggle()">
+      [checked]="checkedHideEmpty"
+      [color]="'primary'"
+      (change)="emptyFilterToggle()">
        <mat-label *ngIf="!checkedHideEmpty">All rows</mat-label>
        <mat-label *ngIf="checkedHideEmpty">Hide empty rows</mat-label>
 
@@ -26,27 +26,34 @@
   <div class="table-wrapper">
     <ng-container *ngFor="let dateData of data; let key = index;">
       <table [dataSource]="dateData" mat-table matSort>
-        <ng-container [matColumnDef]="'drivers'" sticky>
+        <ng-container [matColumnDef]="'drivers'">
 
-          <th *matHeaderCellDef class="border-right" mat-header-cell ><span class="date-header">{{dataDate[key] | date: 'shortDate'}}</span></th>
+          <th *matHeaderCellDef class="border-right" mat-header-cell><span class="date-header">{{dataDate[key] | date: 'shortDate'}}</span>
+          </th>
           <td *matCellDef="let row" class="border-right" mat-cell>{{row['drivers']}}</td>
         </ng-container>
 
-        <ng-container [matColumnDef]="'Object'" sticky>
-          <th *matHeaderCellDef class="border-right" mat-header-cell ><span class="date-header">{{dataDate[key] | date: 'shortDate'}}</span></th>
+        <ng-container [matColumnDef]="'Object'">
+          <th *matHeaderCellDef class="border-right" mat-header-cell><span class="date-header">{{dataDate[key] | date: 'shortDate'}}</span>
+          </th>
           <td *matCellDef="let row" class="border-right" mat-cell>{{row['Object']}}</td>
         </ng-container>
 
 
         <ng-container *ngFor="let time of _displayedColumns; let i = index" [matColumnDef]="time">
-          <th *matHeaderCellDef mat-header-cell >{{time|timeOfDay}}</th>
+          <th *matHeaderCellDef mat-header-cell>{{time|timeOfDay}}</th>
           <td *matCellDef="let row" mat-cell>
             <div [ngClass]="{'green':row[time].driving !== '-'}" class="sub-ceil">{{row[time].driving}}</div>
             <div [ngClass]="{'yellow':row[time].staying !== '-'}" class="sub-ceil">{{row[time].staying}}</div>
           </td>
         </ng-container>
 
-        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row ></tr>
+        <ng-container [matColumnDef]="'Total'" stickyEnd>
+          <th *matHeaderCellDef class="border-left" mat-header-cell><span class="date-header">Total</span></th>
+          <td *matCellDef="let row" class="border-left" mat-cell>{{row['Total']||0}}</td>
+        </ng-container>
+
+        <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
         <tr *matRowDef="let row; columns: displayedColumns" mat-row>
         </tr>
       </table>
