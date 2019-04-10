@@ -35,6 +35,16 @@
       .border-left {
         border-left: 1px solid #e0e0e0;
       }
+      .timeh{
+        display: flex;
+      }
+      th{
+        span{
+          //width: 50px;
+          display: flex;
+          padding: 5px;
+        }
+      }
 
       td {
         //display: flex;

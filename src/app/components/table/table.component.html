@@ -41,7 +41,7 @@
 
 
         <ng-container *ngFor="let time of _displayedColumns; let i = index" [matColumnDef]="time">
-          <th *matHeaderCellDef mat-header-cell>{{time|timeOfDay}}</th>
+          <th *matHeaderCellDef mat-header-cell timeh><span>{{time|timeOfDay}}</span></th>
           <td *matCellDef="let row" mat-cell>
             <div [ngClass]="{'green':row[time].driving !== '-'}" class="sub-ceil">{{row[time].driving}}</div>
             <div [ngClass]="{'yellow':row[time].staying !== '-'}" class="sub-ceil">{{row[time].staying}}</div>
@@ -50,7 +50,9 @@
 
         <ng-container [matColumnDef]="'Total'" stickyEnd>
           <th *matHeaderCellDef class="border-left" mat-header-cell><span class="date-header">Total</span></th>
-          <td *matCellDef="let row" class="border-left" mat-cell>{{row['Total']||0}}</td>
+          <td *matCellDef="let row" class="border-left" mat-cell>
+            <div [ngClass]="{'green':row['Total'].driving !== '-'}" class="sub-ceil">{{row['Total'].driving| secondsToHHss}}</div>
+            <div [ngClass]="{'yellow':row['Total'].staying !== '-'}" class="sub-ceil">{{row['Total'].staying| secondsToHHss}}</div>
         </ng-container>
 
         <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>

@@ -13,6 +13,7 @@ import {BlockUIModule} from 'ng-block-ui';
 import localeEs from '@angular/common/locales/es';
 import localeEsExtra from '@angular/common/locales/extra/es';
 import {registerLocaleData} from '@angular/common';
+import { SecondsToHHssPipe } from './components/table/seconds-to-hhss.pipe';
 
 registerLocaleData(localeEs, 'es-ES', localeEsExtra);
 
@@ -27,6 +28,7 @@ export function init_wialon(wialonService: WialonService) {
     TableComponent,
     HeaderComponent,
     DataFilterComponent,
+    SecondsToHHssPipe,
   ],
   entryComponents: [],
   imports: [

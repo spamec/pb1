@@ -53,18 +53,30 @@ export class TableComponent implements OnInit, OnDestroy {
   }
 
   parseData(object, indexObj, timeData, index, _objects, source) {
+    const parseTimeString = (tms) => {
+      if (tms === '-') { return 0; }
+
+      const parse = (tms as String).split(':');
+
+      return Number(parse[0]) * 3600 + Number(parse[1]) * 60 + Number(parse[2]);
+    };
+
     let driving = (timeData.unit_group_trips.find(item => item.c[source] === object.name) || {c: ['-', '-']}).c[1];
     driving = (driving === '0:00:00') ? '-' : driving;
     let staying = (timeData.unit_group_engine_hours.find(item => item.c[source] === object.name) || {c: ['-', '-']}).c[1];
     staying = (staying === '0:00:00') ? '-' : staying;
 
     if (!_objects[indexObj]) {
-      _objects[indexObj] = {Object: object.name, drivers: object.name, empty: true, Total: 1};
+      _objects[indexObj] = {Object: object.name, drivers: object.name, empty: true, Total: {driving: 0, staying: 0}};
     }
 
+    _objects[indexObj].Total.driving += parseTimeString(driving);
+    _objects[indexObj].Total.staying += parseTimeString(staying);
     if (_objects[indexObj]['empty'] && (driving !== '-' || staying !== '-')) {
       _objects[indexObj]['empty'] = false;
     }
+
+
     _objects[indexObj] = {
       ..._objects[indexObj], ...{
         [index]: {driving, staying},
@@ -118,7 +130,6 @@ export class TableComponent implements OnInit, OnDestroy {
           return new DriverObjects(object);
         });
         console.log(this.drivers);
-        // this.displayedColumns = [...['Time'], ...this.objects.map(object => object.name)];
         return this.drivers;
       }
     );
@@ -128,8 +139,6 @@ export class TableComponent implements OnInit, OnDestroy {
         this.objects = value.map(object => {
           return new WialonObjects(object);
         });
-        console.log(this.objects);
-        // this.displayedColumns = [...['Time'], ...this.objects.map(object => object.name)];
         return this.objects;
       }
     );
